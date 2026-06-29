@@ -1,0 +1,20 @@
+{
+  "chicago_2024": {
+    "fichier": "data/raw/2024/chicago_crimes_2024.csv",
+    "sha256": "3c38a010e8586b94b95d2a5e3b7cd8e04b33537be618b5f774584abe885b65fd",
+    "taille_bytes": 74272731,
+    "date_hachage": "2026-06-28T14:51:46.754680"
+  },
+  "chicago_2025": {
+    "fichier": "data/raw/2025/chicago_crimes_2025.csv",
+    "sha256": "d933d6da4aa98ad6cb72e6ac45f41a22378aa76280a06b3e1ba296d4805cc01c",
+    "taille_bytes": 68155287,
+    "date_hachage": "2026-06-28T14:51:46.849955"
+  },
+  "chicago_2026": {
+    "fichier": "data/raw/2026/chicago_crimes_2026.csv",
+    "sha256": "3125e30edca53a676271fa8186f017608c2563b9880bdae1c6d33eadf9d80a55",
+    "taille_bytes": 29815482,
+    "date_hachage": "2026-06-28T14:51:46.892154"
+  }
+}

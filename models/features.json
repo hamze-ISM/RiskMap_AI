@@ -1,1 +1,1 @@
-["heure", "jour_semaine", "mois", "trimestre", "est_weekend", "est_nuit", "gravite", "crime_type_code", "location_code", "District", "Community Area", "Beat", "densite_district"]
+["heure", "jour_semaine", "mois", "trimestre", "est_weekend", "est_nuit", "District", "Community Area", "Beat", "crime_type_code", "Arrest", "Domestic"]

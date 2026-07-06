@@ -1,183 +1,218 @@
 # =============================================================================
-# Construction des zones géographiques (Grid System)
+# PHASE 11 — Cartographie interactive Folium
+# Fichier : src/mapping/risk_map.py
 # =============================================================================
 
 import pandas as pd
 import numpy as np
+import folium
+from folium.plugins import HeatMap, MarkerCluster, MiniMap
 import os
 
 # =============================================================================
-# CONFIGURATION DE LA GRILLE
+# CONFIGURATION
 # =============================================================================
 
-# Limites géographiques de Chicago (identiques au filtre GPS de la Phase 5)
-LAT_MIN, LAT_MAX = 41.6, 42.1
-LON_MIN, LON_MAX = -87.95, -87.5
+DOSSIER_RAPPORTS = os.path.join("reports", "maps")
+os.makedirs(DOSSIER_RAPPORTS, exist_ok=True)
 
-# Nombre de cases par axe.
-# 50 x 50 = 2500 zones au total, soit environ 1 km² par zone.
-# Tu peux augmenter (100x100) pour plus de précision,
-# ou diminuer (20x20) si tu manques de données.
-NB_CASES = 50
+# Centre géographique de Chicago
+CHICAGO_LAT = 41.8781
+CHICAGO_LON = -87.6298
 
 # =============================================================================
-# CHARGEMENT DES DONNÉES
+# CHARGEMENT
 # =============================================================================
 
 print("=" * 60)
-print("PHASE 7 — Construction des zones géographiques")
+print("PHASE 11 — Cartographie Folium")
 print("=" * 60)
 
-print("\nChargement de crime_clean.csv...")
-df = pd.read_csv(
-    os.path.join("data", "processed", "crime_clean.csv"),
-    low_memory=False
-)
-print(f"  {len(df):,} lignes chargées")
-
-# =============================================================================
-# SECTION 1 — Création de la grille
-# =============================================================================
-
-print("\n[1/4] Création de la grille...")
-
-# np.linspace crée NB_CASES+1 valeurs régulièrement espacées entre min et max.
-# Ces valeurs sont les "bordures" des cases de la grille.
-# Exemple avec NB_CASES=3 :
-#   lat_bins = [41.6, 41.767, 41.933, 42.1]
-#   → 3 intervalles : [41.6–41.767], [41.767–41.933], [41.933–42.1]
-
-lat_bins = np.linspace(LAT_MIN, LAT_MAX, NB_CASES + 1)
-lon_bins = np.linspace(LON_MIN, LON_MAX, NB_CASES + 1)
-
-# pd.cut assigne à chaque crime le numéro de la case correspondante.
-# labels=False retourne un entier (0 à NB_CASES-1) au lieu d'un intervalle texte.
-# include_lowest=True inclut la borne inférieure dans la première case.
-
-df["zone_lat"] = pd.cut(
-    df["latitude"],
-    bins=lat_bins,
-    labels=False,
-    include_lowest=True
-)
-df["zone_lon"] = pd.cut(
-    df["longitude"],
-    bins=lon_bins,
-    labels=False,
-    include_lowest=True
+print("\nChargement des données...")
+zones    = pd.read_csv(os.path.join("data", "processed", "risk_map_data.csv"))
+grille   = pd.read_csv(os.path.join("data", "processed", "grille_horaire.csv"))
+df_crimes = pd.read_csv(
+    os.path.join("data", "processed", "crime_features.csv"),
+    low_memory=False,
+    usecols=["latitude", "longitude", "heure", "primary_type", "risque_predit"]
+    if "risque_predit" in pd.read_csv(
+        os.path.join("data", "processed", "crime_features.csv"), nrows=1
+    ).columns
+    else ["latitude", "longitude", "heure", "primary_type"]
 )
 
-# On supprime les rares lignes dont les coordonnées seraient hors de la grille
-nb_avant = len(df)
-df = df.dropna(subset=["zone_lat", "zone_lon"])
-nb_apres = len(df)
-print(f"  Lignes hors grille supprimées : {nb_avant - nb_apres}")
+print(f"  {len(zones)} zones chargées")
+print(f"  {len(grille):,} combinaisons zone×heure chargées")
 
-# On convertit les numéros de zones en entiers
-df["zone_lat"] = df["zone_lat"].astype(int)
-df["zone_lon"] = df["zone_lon"].astype(int)
-
-# On crée un identifiant unique de zone : "LAT_LON"
-# Exemple : zone_lat=12, zone_lon=34 → zone_id = "12_34"
-df["zone_id"] = df["zone_lat"].astype(str) + "_" + df["zone_lon"].astype(str)
-
-nb_zones = df["zone_id"].nunique()
-print(f"  Grille : {NB_CASES} x {NB_CASES} = {NB_CASES**2} zones possibles")
-print(f"  Zones réellement occupées : {nb_zones} (zones avec au moins 1 crime)")
+# Supprimer les zones sans coordonnées GPS
+zones = zones.dropna(subset=["lat_centre", "lon_centre"])
+print(f"  {len(zones)} zones avec coordonnées GPS valides")
 
 # =============================================================================
-# SECTION 2 — Calcul du score de risque par zone
+# SECTION 1 — Carte principale (zones colorées)
 # =============================================================================
 
-print("\n[2/4] Calcul du score de risque par zone...")
+print("\n[1/4] Carte principale — zones colorées...")
 
-# On compte le nombre de crimes par zone
-crimes_par_zone = df.groupby("zone_id").size().reset_index(name="nb_crimes")
+# Couleurs et icônes par niveau de risque
+config_risque = {
+    "Élevé"  : {"color": "red",    "icon": "exclamation-sign", "fill": "#FF4444"},
+    "Moyen"  : {"color": "orange", "icon": "warning-sign",     "fill": "#FF9800"},
+    "Faible" : {"color": "green",  "icon": "ok-sign",          "fill": "#4CAF50"},
+}
 
-# On calcule le score de risque normalisé entre 0 et 1.
-# min-max normalisation : (valeur - min) / (max - min)
-# Ainsi la zone la moins criminelle → 0.0, la plus criminelle → 1.0
-
-min_crimes = crimes_par_zone["nb_crimes"].min()
-max_crimes = crimes_par_zone["nb_crimes"].max()
-
-crimes_par_zone["score_risque_brut"] = (
-    (crimes_par_zone["nb_crimes"] - min_crimes) /
-    (max_crimes - min_crimes)
+# Création de la carte centrée sur Chicago
+carte = folium.Map(
+    location=[CHICAGO_LAT, CHICAGO_LON],
+    zoom_start=11,
+    tiles="CartoDB positron",   # fond de carte clair et lisible
 )
 
-# On classifie en 3 niveaux : Faible / Moyen / Élevé
-# Les seuils 0.33 et 0.66 découpent en trois tiers égaux.
-# Tu peux les ajuster si tu veux plus de zones rouges ou vertes.
+# Ajout d'un titre HTML sur la carte
+titre_html = """
+<div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+     z-index: 1000; background: white; padding: 10px 20px;
+     border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+     font-family: Arial; font-size: 15px; font-weight: bold; color: #333;">
+    RiskMap_AI — Carte de risque prédictive — Chicago 2024–2026
+</div>
+"""
+carte.get_root().html.add_child(folium.Element(titre_html))
 
-def classifier_risque(score):
-    if score < 0.33:
-        return "Faible"
-    elif score < 0.66:
-        return "Moyen"
+# Ajout d'une mini-carte de navigation
+MiniMap(toggle_display=True).add_to(carte)
+
+# Création de 3 groupes de marqueurs (un par niveau)
+# Permet d'activer/désactiver chaque niveau depuis la légende
+groupe_eleve  = folium.FeatureGroup(name="🔴 Zones Élevé",  show=True)
+groupe_moyen  = folium.FeatureGroup(name="🟠 Zones Moyen",  show=True)
+groupe_faible = folium.FeatureGroup(name="🟢 Zones Faible", show=False)
+
+for _, zone in zones.iterrows():
+    niveau = zone["risque_label"]
+    cfg    = config_risque.get(niveau, config_risque["Faible"])
+
+    # Construction du texte du popup
+    popup_html = f"""
+    <div style="font-family: Arial; font-size: 13px; min-width: 200px;">
+        <b>Zone {zone['zone_id']}</b><br>
+        <hr style="margin: 4px 0;">
+        Niveau de risque : <b style="color: {cfg['fill']};">{niveau}</b><br>
+        Incidents historiques : <b>{int(zone['nb_incidents']):,}</b><br>
+        Prob. Élevé : <b>{zone['proba_eleve_moy']:.1%}</b><br>
+        Prob. Moyen : <b>{zone['proba_moyen_moy']:.1%}</b><br>
+        Prob. Faible : <b>{zone['proba_faible_moy']:.1%}</b><br>
+        <hr style="margin: 4px 0;">
+        <small>Lat: {zone['lat_centre']:.4f} | Lon: {zone['lon_centre']:.4f}</small>
+    </div>
+    """
+
+    marqueur = folium.CircleMarker(
+        location=[zone["lat_centre"], zone["lon_centre"]],
+        radius=10,
+        color=cfg["color"],
+        fill=True,
+        fill_color=cfg["fill"],
+        fill_opacity=0.65,
+        weight=1.5,
+        popup=folium.Popup(popup_html, max_width=250),
+        tooltip=f"Zone {zone['zone_id']} — {niveau} ({int(zone['nb_incidents']):,} incidents)"
+    )
+
+    if niveau == "Élevé":
+        marqueur.add_to(groupe_eleve)
+    elif niveau == "Moyen":
+        marqueur.add_to(groupe_moyen)
     else:
-        return "Élevé"
+        marqueur.add_to(groupe_faible)
 
-crimes_par_zone["niveau_risque"] = crimes_par_zone["score_risque_brut"].apply(classifier_risque)
+groupe_eleve.add_to(carte)
+groupe_moyen.add_to(carte)
+groupe_faible.add_to(carte)
 
-# Affichage de la distribution des niveaux de risque
-distribution = crimes_par_zone["niveau_risque"].value_counts()
-print(f"\n  Distribution des zones :")
-for niveau, nb in distribution.items():
-    print(f"    - {niveau} : {nb} zones")
+print(f"  {len(zones)} marqueurs ajoutés")
 
 # =============================================================================
-# SECTION 3 — Ajout des coordonnées du centre de chaque zone
+# SECTION 2 — Heatmap de densité criminelle
 # =============================================================================
 
-print("\n[3/4] Calcul des centres de zones...")
+print("[2/4] Heatmap de densité...")
 
-# Pour chaque zone_id, on calcule la latitude/longitude moyenne des crimes.
-# Ce sera le point central affiché sur la carte Folium en Phase 11.
+# On utilise les coordonnées réelles des crimes pour la heatmap
+# On prend un échantillon de 50 000 points pour ne pas alourdir la carte
+if "latitude" in df_crimes.columns and "longitude" in df_crimes.columns:
+    sample = df_crimes[["latitude", "longitude"]].dropna().sample(
+        min(50000, len(df_crimes)), random_state=42
+    )
+    points_heatmap = sample.values.tolist()
+else:
+    # Si pas disponible, on utilise les centres de zones pondérés par le nombre d'incidents
+    points_heatmap = []
+    for _, z in zones.iterrows():
+        points_heatmap.append([z["lat_centre"], z["lon_centre"], z["nb_incidents"]])
 
-centres = df.groupby("zone_id").agg(
-    lat_centre=("latitude", "mean"),
-    lon_centre=("longitude", "mean")
-).reset_index()
+groupe_heatmap = folium.FeatureGroup(name="🌡️ Heatmap densité", show=False)
+HeatMap(
+    points_heatmap,
+    radius=15,
+    blur=10,
+    max_zoom=13,
+    gradient={"0.4": "blue", "0.6": "lime", "0.8": "orange", "1.0": "red"}
+).add_to(groupe_heatmap)
+groupe_heatmap.add_to(carte)
 
-# On fusionne les centres avec le tableau des scores de risque
-crimes_par_zone = crimes_par_zone.merge(centres, on="zone_id", how="left")
+print(f"  Heatmap générée avec {len(points_heatmap):,} points")
 
-# Affichage des 5 zones les plus dangereuses
-print("\n  Top 5 zones les plus dangereuses :")
-top5 = crimes_par_zone.nlargest(5, "nb_crimes")[
-    ["zone_id", "nb_crimes", "score_risque_brut", "niveau_risque", "lat_centre", "lon_centre"]
-]
-print(top5.to_string(index=False))
+# =============================================================================
+# SECTION 3 — Légende
+# =============================================================================
+
+print("[3/4] Légende...")
+
+legende_html = """
+<div style="position: fixed; bottom: 30px; right: 20px; z-index: 1000;
+     background: white; padding: 15px; border-radius: 10px;
+     box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-family: Arial; font-size: 13px;">
+    <b style="font-size: 14px;">Niveau de risque</b><br><br>
+    <span style="color: #FF4444;">&#9632;</span> Élevé — Intervention prioritaire<br>
+    <span style="color: #FF9800;">&#9632;</span> Moyen — Surveillance renforcée<br>
+    <span style="color: #4CAF50;">&#9632;</span> Faible — Zone calme<br>
+    <hr style="margin: 8px 0;">
+    <small>Modèle : XGBoost — F1 = 0.9192<br>
+    Données : Chicago 2024–2026<br>
+    RiskMap_AI © 2026</small>
+</div>
+"""
+carte.get_root().html.add_child(folium.Element(legende_html))
+
+# Contrôle des couches (checkbox pour activer/désactiver)
+folium.LayerControl(collapsed=False).add_to(carte)
 
 # =============================================================================
 # SECTION 4 — Sauvegarde
 # =============================================================================
 
-print("\n[4/4] Sauvegarde des fichiers...")
+print("[4/4] Sauvegarde...")
 
-# On sauvegarde le dataset enrichi avec les colonnes de zone
-chemin_avec_zones = os.path.join("data", "processed", "crime_with_zones.csv")
-df.to_csv(chemin_avec_zones, index=False)
-print(f"  Sauvegardé : {chemin_avec_zones}")
-
-# On sauvegarde la table des zones avec les scores de risque
-chemin_zones = os.path.join("data", "processed", "zones_risque.csv")
-crimes_par_zone.to_csv(chemin_zones, index=False)
-print(f"  Sauvegardé : {chemin_zones}")
+chemin_carte = os.path.join("reports", "maps", "risk_map.html")
+carte.save(chemin_carte)
+print(f"  Carte sauvegardée : {chemin_carte}")
 
 # =============================================================================
-# RÉSUMÉ FINAL
+# RÉSUMÉ
 # =============================================================================
+
+nb_eleve  = len(zones[zones["risque_label"] == "Élevé"])
+nb_moyen  = len(zones[zones["risque_label"] == "Moyen"])
+nb_faible = len(zones[zones["risque_label"] == "Faible"])
 
 print("\n" + "=" * 60)
-print("RÉSUMÉ PHASE 7")
+print("RÉSUMÉ PHASE 11")
 print("=" * 60)
-print(f"  Dataset enrichi : {len(df):,} lignes avec zone_lat, zone_lon, zone_id")
-print(f"  Table des zones : {len(crimes_par_zone)} zones avec score de risque")
-print(f"  Nouvelles colonnes créées : zone_lat, zone_lon, zone_id")
-print(f"  Fichiers produits :")
-print(f"    - crime_with_zones.csv")
-print(f"    - zones_risque.csv")
-print("\nPhase 7 terminée avec succès.")
-print("Tu peux maintenant passer à la Phase 8 — Feature Engineering.")
+print(f"  Zones Élevé   (rouge)  : {nb_eleve}")
+print(f"  Zones Moyen   (orange) : {nb_moyen}")
+print(f"  Zones Faible  (vert)   : {nb_faible}")
+print(f"\n  Carte interactive : {chemin_carte}")
+print("  Ouvre ce fichier dans ton navigateur pour visualiser la carte.")
+print("\nPhase 11 terminée avec succès.")
+print("Tu peux maintenant passer à la Phase 12 — Système d'alertes.")

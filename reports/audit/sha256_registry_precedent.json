@@ -1,0 +1,9 @@
+{
+  "horodatage": "2026-07-06 11:15:23",
+  "empreintes": {
+    "data\\processed\\crime_clean.csv": "92f2fca427d5be8ae38aeb4e9c8cfecff06299eb19de57f86d89359784c74025",
+    "data\\processed\\features.csv": "1d30857329d65d95006ed1e51021d575e62703330b75620f7c498c05abef6a1e",
+    "data\\processed\\risk_map_data.csv": "4e71ca47dd057a8077dd8f83515b079415484b3e3f0f057e992fba59efd2a339",
+    "models\\best_model.pkl": "4f3b5489e6e2c354729790e65c22c8596a5b027f588d326538aaeeb2b8f802a1"
+  }
+}

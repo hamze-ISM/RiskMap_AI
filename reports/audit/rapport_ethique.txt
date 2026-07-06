@@ -1,0 +1,54 @@
+
+=================================================================
+RAPPORT D'AUDIT ÉTHIQUE — RiskMap_AI
+Généré le : 2026-07-06 11:15:23
+=================================================================
+
+1. INTÉGRITÉ DES DONNÉES
+   ✓ Hachage SHA256 calculé pour 4 fichiers critiques
+   ✓ Registre de référence créé dans reports/audit/
+   → Action : relancer ce script après toute modification pour détecter
+     les altérations non autorisées.
+
+2. BIAIS ALGORITHMIQUE
+   Biais temporel    : ACCEPTABLE
+   Biais saisonnier  : ACCEPTABLE
+   Concentration geo : EQUILIBRE
+   → Le modèle prédit un risque plus élevé la nuit, en été, et dans
+     le centre-ville. Ces patterns reflètent la réalité criminologique
+     de Chicago et ne constituent pas un biais discriminatoire.
+
+3. ANONYMISATION
+   ✓ Aucune donnée personnelle dans le pipeline ML
+   ✓ Granularité minimale : zone de ~1 km² (non-traçant)
+   ✓ Aucun identifiant individuel (case_number, adresse exacte)
+
+4. CADRE ÉTHIQUE ET LIMITES
+   ⚠ LIMITES À DOCUMENTER POUR LA SOUTENANCE :
+
+   a) Risque de discrimination par quartier
+      Le modèle peut renforcer des inégalités existantes si les
+      décideurs sur-patrouillent les zones Élevé, créant un biais
+      de confirmation (plus de patrouilles = plus d'arrestations
+      = plus de données = zone encore plus classée Élevé).
+      Recommandation : utiliser le modèle comme aide à la décision,
+      jamais comme décision automatique.
+
+   b) Données historiques biaisées
+      Les données Chicago reflètent les crimes SIGNALÉS, pas les
+      crimes réels. Les zones sous-patrouillées apparaissent
+      artificiellement plus sûres.
+
+   c) Vie privée et surveillance
+      Ce système ne doit pas être utilisé pour surveiller des
+      individus. La granularité zone (~1 km²) est un garde-fou.
+
+   d) Applicabilité à Dakar
+      Les patterns de Chicago ne sont pas directement transférables.
+      Un modèle Dakar nécessiterait des données locales (ACLED).
+
+5. RECOMMANDATIONS FINALES
+   → Audit éthique à renouveler à chaque mise à jour du modèle
+   → Impliquer des acteurs locaux dans la définition des seuils
+   → Ne jamais déployer sans supervision humaine des alertes
+=================================================================

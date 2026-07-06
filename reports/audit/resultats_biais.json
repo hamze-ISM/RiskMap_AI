@@ -1,0 +1,15 @@
+{
+  "biais_temporel": {
+    "ecart": 0.11799999999999988,
+    "heure_max_risque": 11,
+    "statut": "ACCEPTABLE"
+  },
+  "biais_saisonnier": {
+    "ecart": 0.008000000000000007,
+    "statut": "ACCEPTABLE"
+  },
+  "concentration_geo": {
+    "pct_zones_elevees": 11.883691529709228,
+    "statut": "EQUILIBRE"
+  }
+}

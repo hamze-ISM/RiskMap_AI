@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor "Analyste Sécurité"   as Analyste
+actor "Décideur / Maire"    as Decideur
+actor "Système Automatique" as Systeme
+actor "Administrateur"      as Admin
+
+rectangle "RiskMap_AI" {
+    usecase "Consulter la carte\nde risque interactive"     as UC1
+    usecase "Lancer une prédiction\nde zone à risque"       as UC2
+    usecase "Recevoir une alerte\ngéolocalisée"             as UC3
+    usecase "Consulter le dashboard\nKPIs / ROI"            as UC4
+    usecase "Exporter un rapport"                           as UC5
+    usecase "Vérifier l'intégrité\ndes données (SHA256)"    as UC6
+    usecase "Analyser les biais\ndu modèle"                 as UC7
+    usecase "Mettre à jour\nles données"                    as UC8
+    usecase "Générer les alertes\nautomatiquement"          as UC9
+}
+
+Analyste  --> UC1
+Analyste  --> UC2
+Analyste  --> UC3
+Analyste  --> UC5
+Decideur  --> UC4
+Decideur  --> UC5
+Decideur  --> UC3
+Admin     --> UC6
+Admin     --> UC7
+Systeme   --> UC8
+Systeme   --> UC9
+UC9 .> UC3 : <<include>>
+UC2 .> UC1 : <<include>>
+@enduml

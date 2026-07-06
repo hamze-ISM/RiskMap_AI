@@ -1,0 +1,42 @@
+@startuml
+skinparam sequenceArrowThickness 2
+
+actor "Analyste" as A
+participant "Dashboard\nStreamlit" as D
+participant "RiskModel" as M
+participant "DataCleaner" as C
+participant "RiskMap\nFolium" as MAP
+participant "AlertSystem" as AL
+participant "IntegrityChecker" as IC
+
+A -> D : Lance une analyse
+D -> IC : Vérifier intégrité des données
+IC -> IC : Calculer SHA256
+IC --> D : ✅ Données intègres
+
+D -> C : Charger et nettoyer les données
+C -> C : Supprimer doublons/GPS nuls
+C -> C : Extraire features temporelles
+C --> D : DataFrame nettoyé
+
+D -> M : Entraîner le modèle
+M -> M : Random Forest + XGBoost
+M -> M : Évaluer (accuracy, F1, ROC)
+M --> D : Modèle entraîné + métriques
+
+D -> M : Générer prédictions de risque
+M --> D : Scores de risque par zone
+
+D -> MAP : Créer carte interactive
+MAP -> MAP : Heatmap + clusters
+MAP -> MAP : Colorier zones (vert/orange/rouge)
+MAP --> D : Carte HTML
+
+D -> AL : Analyser les scores
+AL -> AL : Détecter zones critiques
+AL -> AL : Générer alertes
+AL --> A : Alertes géolocalisées
+
+A -> D : Consulter KPIs / ROI
+D --> A : Dashboard économique MOSIEF
+@enduml

@@ -1,0 +1,72 @@
+@startuml
+skinparam rectangle {
+    BackgroundColor lightyellow
+    BorderColor darkgoldenrod
+}
+
+rectangle "Sources de données" {
+    [Chicago Crime 2024] as D1
+    [Chicago Crime 2025] as D2
+    [Chicago Crime 2026] as D3
+    [ACLED Sénégal]      as D4
+}
+
+rectangle "Prétraitement" {
+    [merge_data.py]            as P1
+    [clean_data.py]            as P2
+    [feature_engineering.py]   as P3
+}
+
+rectangle "Modélisation ML" {
+    [Random Forest]  as M1
+    [XGBoost]        as M2
+    [predict.py]     as M3
+}
+
+rectangle "Cartographie" {
+    [risk_map.py Folium]     as C1
+    [Heatmap]                as C2
+    [MarkerCluster]          as C3
+}
+
+rectangle "Alertes" {
+    [alerts.py]   as A1
+    [Logger CSV]  as A2
+}
+
+rectangle "Cybersécurité" {
+    [integrity_check.py]    as S1
+    [bias_analysis.py]      as S2
+    [adversarial_test.py]   as S3
+}
+
+rectangle "Dashboard" {
+    [Streamlit]       as DB1
+    [KPIs MOSIEF]     as DB2
+    [ROI Calculator]  as DB3
+}
+
+D1 --> P1
+D2 --> P1
+D3 --> P1
+D4 --> P1
+P1 --> P2
+P2 --> P3
+P3 --> M1
+P3 --> M2
+M1 --> M3
+M2 --> M3
+M3 --> C1
+C1 --> C2
+C1 --> C3
+M3 --> A1
+A1 --> A2
+S1 --> P1
+M3 --> S2
+M3 --> S3
+M3 --> DB1
+C1 --> DB1
+A1 --> DB1
+DB1 --> DB2
+DB1 --> DB3
+@enduml

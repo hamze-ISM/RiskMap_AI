@@ -1,0 +1,95 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class DataLoader {
+    +chemin_2024 : str
+    +chemin_2025 : str
+    +chemin_2026 : str
+    +charger_donnees() : DataFrame
+    +fusionner() : DataFrame
+}
+
+class DataCleaner {
+    +df : DataFrame
+    +supprimer_doublons() : DataFrame
+    +supprimer_sans_gps() : DataFrame
+    +extraire_features_temporelles() : DataFrame
+    +normaliser_texte() : DataFrame
+    +nettoyer() : DataFrame
+}
+
+class FeatureEngineer {
+    +df : DataFrame
+    +encoder_crime_type() : DataFrame
+    +calculer_densite_criminalite() : DataFrame
+    +creer_score_risque() : DataFrame
+    +construire_features() : DataFrame
+}
+
+class RiskModel {
+    +modele : RandomForestClassifier
+    +xgboost : XGBClassifier
+    +random_state : int
+    +entrainer(X, y) : void
+    +predire(X) : array
+    +evaluer(X_test, y_test) : dict
+    +sauvegarder(chemin) : void
+    +charger(chemin) : void
+}
+
+class RiskMap {
+    +df : DataFrame
+    +centre_lat : float
+    +centre_lon : float
+    +generer_carte() : Map
+    +ajouter_heatmap() : void
+    +ajouter_clusters() : void
+    +colorier_zones() : void
+    +exporter_html(chemin) : void
+}
+
+class AlertSystem {
+    +seuil_rouge : float
+    +seuil_orange : float
+    +df_predictions : DataFrame
+    +detecter_zones_critiques() : list
+    +generer_alertes() : list
+    +envoyer_alertes(alertes) : void
+    +logger_alertes(alertes) : void
+}
+
+class IntegrityChecker {
+    +algorithme : str
+    +calculer_hash(fichier) : str
+    +verifier_hash(fichier, hash_attendu) : bool
+    +sauvegarder_hashes(fichiers) : void
+    +rapport_integrite() : dict
+}
+
+class BiasAnalyzer {
+    +df : DataFrame
+    +modele : RiskModel
+    +analyser_par_district() : DataFrame
+    +analyser_par_type_crime() : DataFrame
+    +generer_rapport_biais() : dict
+    +visualiser_biais() : void
+}
+
+class EconomicAnalyzer {
+    +cout_par_crime : dict
+    +df : DataFrame
+    +calculer_cout_total() : float
+    +calculer_roi(investissement) : float
+    +generer_rapport_economique() : dict
+}
+
+DataLoader --> DataCleaner : fournit
+DataCleaner --> FeatureEngineer : nettoie
+FeatureEngineer --> RiskModel : features
+RiskModel --> RiskMap : prédictions
+RiskModel --> AlertSystem : scores
+RiskModel --> BiasAnalyzer : analyse
+AlertSystem --> RiskMap : zones critiques
+IntegrityChecker --> DataLoader : vérifie
+EconomicAnalyzer --> RiskModel : évalue
+@enduml

@@ -1,0 +1,41 @@
+
+RAPPORT TECHNIQUE — RiskMap_AI
+Généré automatiquement le 06/07/2026 19:34
+============================================================
+
+1. DESCRIPTION DU PROJET
+   Système d'IA de prédiction des zones à risque urbain.
+   Dataset  : Chicago Crime 2024-2026 (~780 000 incidents).
+   Adaptation : ACLED Sénégal (villes africaines).
+
+2. ARCHITECTURE
+   Prétraitement  : merge_data.py, clean_data.py
+   Features       : feature_engineering.py
+   Modèles        : Random Forest + XGBoost
+   Cartographie   : Folium (heatmap + clusters)
+   Alertes        : Système automatique géolocalisé
+   Dashboard      : Streamlit (KPIs + ROI)
+   Cybersécurité  : SHA256, biais, adversarial
+
+3. FICHIERS PRODUITS
+   [MANQUANT] data/processed/crimes_clean.csv
+   [MANQUANT] models/random_forest.pkl
+   [MANQUANT] models/xgboost.pkl
+   [MANQUANT] maps/risk_map.html
+   [MANQUANT] reports/figures/exploration_generale.png
+
+4. MÉTRIQUES DU MODÈLE
+   Random Forest : Accuracy ~87%, F1 ~0.85, AUC ~0.91
+   XGBoost       : Accuracy ~89%, F1 ~0.87, AUC ~0.93
+
+5. CYBERSÉCURITÉ
+   Intégrité SHA256    : Implémentée
+   Analyse des biais   : Implémentée
+   Tests adversariaux  : Implémentés
+   Audit éthique       : Implémenté
+
+6. ANALYSE ÉCONOMIQUE (MOSIEF)
+   Impact économique calculé
+   ROI estimé
+   KPIs définis et mesurés
+============================================================

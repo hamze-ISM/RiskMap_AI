@@ -1,0 +1,60 @@
+=================================================================
+  RAPPORT D'ALERTES — RiskMap_AI
+  Généré le : 2026-07-06 11:09:59
+  Heure analysée : 22h00
+=================================================================
+
+🔴 ALERTES CRITIQUES (intervention immédiate)
+---------------------------------------------
+  Zone 41_30    | Prob. Élevé : 79.6% | Incidents : 2,169
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 37_32    | Prob. Élevé : 82.9% | Incidents : 2,722
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 38_32    | Prob. Élevé : 82.3% | Incidents : 2,397
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 39_32    | Prob. Élevé : 83.5% | Incidents : 2,391
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 30_34    | Prob. Élevé : 81.0% | Incidents : 2,310
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 34_33    | Prob. Élevé : 87.7% | Incidents : 3,265
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 34_32    | Prob. Élevé : 83.3% | Incidents : 2,267
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 35_33    | Prob. Élevé : 78.6% | Incidents : 1,960
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 28_34    | Prob. Élevé : 94.9% | Incidents : 2,104
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+  Zone 15_42    | Prob. Élevé : 91.7% | Incidents : 2,505
+  → Déploiement immédiat de patrouilles recommandé. Éviter la zone si possible.
+
+🟠 ALERTES MODÉRÉES (surveillance renforcée)
+---------------------------------------------
+  Zone 14_31    | Prob. Élevé : 58.4% | Incidents : 2,069
+  Zone 30_24    | Prob. Élevé : 60.6% | Incidents : 2,063
+  Zone 15_41    | Prob. Élevé : 73.0% | Incidents : 1,342
+  Zone 15_40    | Prob. Élevé : 74.0% | Incidents : 1,979
+  Zone 29_26    | Prob. Élevé : 63.3% | Incidents : 2,596
+  Zone 30_26    | Prob. Élevé : 55.5% | Incidents : 1,082
+  Zone 30_20    | Prob. Élevé : 74.2% | Incidents : 1,753
+  Zone 38_33    | Prob. Élevé : 60.1% | Incidents : 3
+  Zone 33_33    | Prob. Élevé : 73.1% | Incidents : 3,303
+  Zone 35_32    | Prob. Élevé : 70.2% | Incidents : 946
+
+=================================================================
+STATISTIQUES GLOBALES
+---------------------------------------------
+  Total zones analysées : 791
+  Zones ROUGE  : 50
+  Zones ORANGE : 40
+  Zones JAUNE  : 157
+  Zones VERT   : 544
+=================================================================

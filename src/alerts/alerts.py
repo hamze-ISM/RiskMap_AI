@@ -126,7 +126,8 @@ grille_heure = grille[grille["heure"] == HEURE_SIMULATION].copy()
 grille_heure = grille_heure.merge(
     zones[["zone_id", "proba_eleve_moy", "proba_moyen_moy", "nb_incidents"]],
     on="zone_id",
-    how="left"
+    how="left",
+    suffixes=("_grille", "")
 )
 
 # Classifier les alertes horaires

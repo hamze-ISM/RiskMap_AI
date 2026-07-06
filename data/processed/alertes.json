@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ALERT-18-8",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 18,
+    "community_area": 8,
+    "nb_incidents": 27016,
+    "crime_principal": "THEFT",
+    "latitude": 41.897287,
+    "longitude": -87.630824,
+    "message": "ALERTE ROUGE — District 18 : 27016 incidents detectes. Crime dominant : THEFT."
+  },
+  {
+    "id": "ALERT-1-32",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 1,
+    "community_area": 32,
+    "nb_incidents": 21376,
+    "crime_principal": "THEFT",
+    "latitude": 41.879823,
+    "longitude": -87.627921,
+    "message": "ALERTE ROUGE — District 1 : 21376 incidents detectes. Crime dominant : THEFT."
+  },
+  {
+    "id": "ALERT-12-28",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 12,
+    "community_area": 28,
+    "nb_incidents": 20185,
+    "crime_principal": "THEFT",
+    "latitude": 41.877574,
+    "longitude": -87.663243,
+    "message": "ALERTE ROUGE — District 12 : 20185 incidents detectes. Crime dominant : THEFT."
+  },
+  {
+    "id": "ALERT-15-25",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 15,
+    "community_area": 25,
+    "nb_incidents": 19971,
+    "crime_principal": "BATTERY",
+    "latitude": 41.885259,
+    "longitude": -87.758893,
+    "message": "ALERTE ROUGE — District 15 : 19971 incidents detectes. Crime dominant : BATTERY."
+  },
+  {
+    "id": "ALERT-19-6",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 19,
+    "community_area": 6,
+    "nb_incidents": 15444,
+    "crime_principal": "THEFT",
+    "latitude": 41.943644,
+    "longitude": -87.65323,
+    "message": "ALERTE ROUGE — District 19 : 15444 incidents detectes. Crime dominant : THEFT."
+  },
+  {
+    "id": "ALERT-6-71",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 6,
+    "community_area": 71,
+    "nb_incidents": 13398,
+    "crime_principal": "BATTERY",
+    "latitude": 41.748187,
+    "longitude": -87.656406,
+    "message": "ALERTE ROUGE — District 6 : 13398 incidents detectes. Crime dominant : BATTERY."
+  },
+  {
+    "id": "ALERT-6-44",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 6,
+    "community_area": 44,
+    "nb_incidents": 13392,
+    "crime_principal": "BATTERY",
+    "latitude": 41.742942,
+    "longitude": -87.612483,
+    "message": "ALERTE ROUGE — District 6 : 13392 incidents detectes. Crime dominant : BATTERY."
+  },
+  {
+    "id": "ALERT-3-43",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 3,
+    "community_area": 43,
+    "nb_incidents": 13013,
+    "crime_principal": "BATTERY",
+    "latitude": 41.766206,
+    "longitude": -87.576343,
+    "message": "ALERTE ROUGE — District 3 : 13013 incidents detectes. Crime dominant : BATTERY."
+  },
+  {
+    "id": "ALERT-10-29",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 10,
+    "community_area": 29,
+    "nb_incidents": 12744,
+    "crime_principal": "BATTERY",
+    "latitude": 41.859751,
+    "longitude": -87.717318,
+    "message": "ALERTE ROUGE — District 10 : 12744 incidents detectes. Crime dominant : BATTERY."
+  },
+  {
+    "id": "ALERT-8-66",
+    "timestamp": "2026-07-06 23:51:54",
+    "niveau": "ROUGE",
+    "district": 8,
+    "community_area": 66,
+    "nb_incidents": 12066,
+    "crime_principal": "BATTERY",
+    "latitude": 41.774797,
+    "longitude": -87.69382,
+    "message": "ALERTE ROUGE — District 8 : 12066 incidents detectes. Crime dominant : BATTERY."
+  }
+]

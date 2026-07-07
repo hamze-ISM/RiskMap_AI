@@ -1,0 +1,17 @@
+{
+  "crimes_clean.csv": {
+    "hash": "44546ac87ce4ee13782ff0372aa3a140b80f8cfffd25c497b6a3111831a788db",
+    "timestamp": "2026-07-07 00:00:56",
+    "chemin": "C:\\RiskMap_AI\\data\\processed\\crimes_clean.csv"
+  },
+  "crimes_features.csv": {
+    "hash": "bcf9c6f1e97f379f3709324a4f92d4038b73e660a0e016e15eb9f0e7f78eff42",
+    "timestamp": "2026-07-07 00:00:57",
+    "chemin": "C:\\RiskMap_AI\\data\\processed\\crimes_features.csv"
+  },
+  "random_forest.pkl": {
+    "hash": "d3bc7de90d63df76ecefc53e22b739cff2e3a514cf106070089e5488b3da6aea",
+    "timestamp": "2026-07-07 00:00:57",
+    "chemin": "C:\\RiskMap_AI\\models\\random_forest.pkl"
+  }
+}
